@@ -2,7 +2,6 @@ from PyQt5 import uic, QtWidgets
 import mysql.connector
 from reportlab.pdfgen import canvas
 
-from PyQt5 import uic, QtWidgets
 
 banco = mysql.connector.connect(
     host='localhost',
@@ -42,3 +41,31 @@ app.exec()
 
 
 
+def consultarContatos():
+    listarContatos.show
+
+    cursor = banco.cursor()
+    comando_SQL = 'SELECT * FROM contatos'
+    cursor.execute(comando_SQL)
+    contatosLidos = cursor.fetchall()
+    
+    listarContatos.tabelaContatos.setRowCount(len(contatosLidos))
+    listarContatos.tabelaContatos.setColumnCount(5)
+
+    for i in range (0, len(contatosLidos)):
+        for f in range (0 , 5):
+            listarContatos.tabelaContatos.setItem(i, f, QtWidgets.QTableWidgetItem(str(contatosLidos[i][f])))
+
+
+
+app = QtWidgets.QApplication([])
+listaContato = uic.loadUi('contatos.ui')
+
+agenda.btnCadastro.clicked.connect(cadastrarContato)
+agenda.btnConsultar.clicked.connect(consultarContatos)
+
+listarContatos.btnGerarPdf.clicked.connect(gerarPdf)
+listarContatos.btnExcluirContato.clicked.connect(excluirContato)
+
+agenda.show()
+app.exec()
